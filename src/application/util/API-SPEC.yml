@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  version: '1.0.0'
+  title: 'Personal Finance: Medicines API Node'
+  description: 'Personal Finance: Medicines API Node'
+  contact:
+    name: Support
+    email: arturo.amb89@gmail.com
+servers:
+  - url: http://localhost:3000/
+    description: Local development
+tags:
+  - name: 'Base'
+    description: 'Healthcheck'
+paths:
+  /:
+    get:
+      tags:
+        - 'Base'
+      summary: 'Obtain API health check information'
+      responses:
+        '200':
+          description: 'Health Check Response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+components:
+  schemas:
+    HealthCheckResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'pf-medicines-api-node'
+        uptime:
+          type: string
+          example: '1 hour, 8 minutes, 42,94 seconds'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    BadResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - properties:
+            message:
+              example: 'Malformed request'
+    NotFoundResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - properties:
+            message:
+              example: 'Not found'
+    NotAllowedResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - properties:
+            message:
+              example: 'Not allowed'
+    InternalErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - properties:
+            message:
+              example: 'Internal Server Error'

@@ -1,0 +1,19 @@
+FROM node:20.11.0-alpine
+LABEL maintainer 'Arturo Mendoza <arturo.amb89@gmail.com>'
+RUN addgroup -S pfmedicines
+RUN adduser -D -S -g pfmedicines pfmedicines
+RUN mkdir -p /app /home/pfmedicines/Downloads
+RUN chown -R pfmedicines:pfmedicines /home/pfmedicines /app
+RUN apk add --no-cache sudo nano dumb-init curl
+HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost/ || exit 1
+WORKDIR /app
+USER pfmedicines
+ENV NODE_ENV=${NODE_ENV}
+ENV NPM_CONFIG_PREFIX=/home/pfmedicines/.npm-global
+ENV PATH=$PATH:/home/pfmedicines/.npm-global/bin
+COPY --chown=pfmedicines:pfmedicines package*.json ./
+RUN npm run install-build:production
+COPY --chown=pfmedicines:pfmedicines . .
+USER root
+RUN chmod -R 775 /app
+USER pfmedicines
