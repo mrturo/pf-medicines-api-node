@@ -1,0 +1,40 @@
+name: Checking Repository Code
+on: [push]
+jobs:
+  Checking-Repository-Code:
+    runs-on: ubuntu-latest
+    environment: Testing
+    env:
+      XXX: ${{ vars.XXX }}
+    steps:
+      - name: Environment Variables
+        run: |
+          echo "XXX: ${{ env.XXX }}"
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Build Package
+        run: npm run install-build:production
+      - name: Testing code
+        run: npm run test-coverage:complete
+      - name: Prettier-linting code
+        run: npm run prettier-lint
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: Check for changes
+        id: changes
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "changes=true" >> $GITHUB_ENV
+          else
+            echo "changes=false" >> $GITHUB_ENV
+          fi
+      - name: Commit and push changes
+        if: env.changes == 'true'
+        run: |
+          git add .
+          git commit --amend --no-edit
+          git push --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

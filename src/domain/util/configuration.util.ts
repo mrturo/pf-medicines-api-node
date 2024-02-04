@@ -58,8 +58,26 @@ export class Configuration {
       3000
     );
   }
-  public static xxx(): string {
-    return new Configuration(process.env.XXX).value;
+  public static postgresql(): {
+    personalFinance: {
+      database: string;
+      host: string;
+      password: string;
+      port: number;
+      user: string;
+    };
+  } {
+    return {
+      personalFinance: {
+        database: new Configuration(process.env.POSTGRESQL_PF_DATABASE).value,
+        host: new Configuration(process.env.POSTGRESQL_PF_HOST).value,
+        password: new Configuration(process.env.POSTGRESQL_PF_PASSWORD).value,
+        port: Configuration.valueToNumber(
+          new Configuration(process.env.POSTGRESQL_PF_PORT)
+        ),
+        user: new Configuration(process.env.POSTGRESQL_PF_USER).value
+      }
+    };
   }
   public static showValues(
     preLog: number | string | undefined | null = undefined
@@ -74,6 +92,26 @@ export class Configuration {
     ]);
     LoggerUtil.debug([preLog, ` * nodeEnv: ${Configuration.nodeEnv()}`]);
     LoggerUtil.debug([preLog, ` * port: ${Configuration.port()}`]);
+    LoggerUtil.debug([
+      preLog,
+      ` * postgresql.personalFinance.database: ${Configuration.postgresql().personalFinance.database}`
+    ]);
+    LoggerUtil.debug([
+      preLog,
+      ` * postgresql.personalFinance.host: ${Configuration.postgresql().personalFinance.host}`
+    ]);
+    LoggerUtil.debug([
+      preLog,
+      ` * postgresql.personalFinance.password: ${Configuration.postgresql().personalFinance.password}`
+    ]);
+    LoggerUtil.debug([
+      preLog,
+      ` * postgresql.personalFinance.port: ${Configuration.postgresql().personalFinance.port}`
+    ]);
+    LoggerUtil.debug([
+      preLog,
+      ` * postgresql.personalFinance.user: ${Configuration.postgresql().personalFinance.user}`
+    ]);
   }
   private _value!: string;
   constructor(value: string | null | undefined = undefined) {

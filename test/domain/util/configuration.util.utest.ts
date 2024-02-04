@@ -7,9 +7,15 @@ describe('Class Configuration', () => {
     expect(ConfigurationUtil.packageName()).not.toBeNull();
     expect(ConfigurationUtil.packageName()).not.toBeUndefined();
     expect(ConfigurationUtil.port()).toBeGreaterThan(0);
-    expect(ConfigurationUtil.xxx()).not.toBe('');
-    expect(ConfigurationUtil.xxx()).not.toBeNull();
-    expect(ConfigurationUtil.xxx()).not.toBeUndefined();
+    expect(ConfigurationUtil.postgresql().personalFinance.database).not.toBe(
+      ''
+    );
+    expect(ConfigurationUtil.postgresql().personalFinance.host).not.toBe('');
+    expect(ConfigurationUtil.postgresql().personalFinance.password).not.toBe(
+      ''
+    );
+    expect(ConfigurationUtil.postgresql().personalFinance.port).not.toBe(0);
+    expect(ConfigurationUtil.postgresql().personalFinance.user).not.toBe('');
     expect(ConfigurationUtil.isTrue('')).toBe(true);
     expect(ConfigurationUtil.isTrue('N')).toBe(false);
     expect(ConfigurationUtil.isTrue('S')).toBe(true);
